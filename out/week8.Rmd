@@ -7,10 +7,36 @@ output: html_document
 
 # **Reproducible Image and Online Resources**
 
-An image of this project as of `r Sys.Date()` can be accessed by [clicking this link](https://mybinder.org/v2/gh/evanknep/psy8712-week8/HEAD). 
+An image of this project as of *`r Sys.Date()`* can be accessed by [clicking this link](https://mybinder.org/v2/gh/evanknep/psy8712-week8/HEAD). 
+
+An interactive web app is available by [clicking this link] instead. 
+
+# **Script Settings and Resources**
+```{r script settings, echo=TRUE, results='hide'}
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+library(tidyverse)
+library(dplyr)
+library(DT)
+library(ggplot2)
+```
+
+# **Data Import and Cleaning**
+Importing our dataset for preprocessing. Steps include reverse coding question q5 and converting our time columns into POSIX format. 
+
+```{r data import and cleaning}
+week8_tbl = read_csv("../data/week3.csv") %>% #initial data import
+  mutate(q5 = 6 - q5) %>% #reverse coding our q5
+  mutate(timeStart = as.POSIXct(timeStart)) %>% #converting our timestart and timeend columns to date time format
+  mutate(timeEnd = as.POSIXct(timeEnd))
+```
+# **Visualization**
+```{r visualization}
+week8_tbl %>%
+  select(q1:q6) %>% #selecting our desired subset of questions
+  DT::datatable(options = list(pageLength = 5)) # creating a table with paginations
 
 
-
+```
 
 
 
