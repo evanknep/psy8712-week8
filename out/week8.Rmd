@@ -30,41 +30,39 @@ week8_tbl = read_csv("../data/week3.csv") %>% #initial data import
   mutate(timeEnd = as.POSIXct(timeEnd))
 ```
 # **Visualization**
-```{r visualization}
+Presenting questionnaire scores in table format to allow access to raw scores, as well as a visualization of the relationship between questions 1-6 and and questions 8-10 via a correlation of the mean scores. Question 5 has been reverse scored. 
+```{r visualization, echo=FALSE, message=FALSE}
 week8_tbl %>%
   select(q1:q6) %>% #selecting our desired subset of questions
   DT::datatable(options = list(pageLength = 5)) # creating a table with paginations
 
+week8_tbl %>%
+  rowwise() %>%
+  mutate(q1_q6_mean = mean(c_across(q1:q6), na.rm = TRUE),
+         q8_q10_mean = mean(c_across(q8:q10), na.rm = TRUE)) %>%
+  ggplot(aes(x=q1_q6_mean, y=q8_q10_mean)) + geom_point() + geom_smooth(method = "lm", color = "purple") + labs(x = "q1-q6 mean", y = "q8-q10 mean")
+
 
 ```
 
+# **Analysis**
+Observing the relationship between between responses to questions 1-6 and 8-10 by observing strength of correlation between the means of each batch of questions. 
+```{r}
+mean_scores_tbl <- week8_tbl %>% # I realize rerunning this same code from above is probably not the correct answer, but when I attempt to save a new tibble with the mean values all in a single pipeline it also contains the plotting information so it gets a bit weird
+  rowwise() %>%
+  mutate(q1_q6_mean = mean(c_across(q1:q6), na.rm = TRUE),
+         q8_q10_mean = mean(c_across(q8:q10), na.rm = TRUE))
 
-
-
-
-
-
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+corr_values = cor.test(mean_scores_tbl$q1_q6_mean, mean_scores_tbl$q8_q10_mean)
 ```
 
-## R Markdown
+When comparing the mean values of responses to questions 1-6 and 8-10, I find a correlation of `r corr_values$estimate`. Our p-value for this correlation is `r corr_values$p.value`, which when combined with our correlation of near 0, suggests that mean responses of questions 1-6 and 8-10 are not correlated. 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# **Data Export**
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r Data Export}
+mean_scores_tbl %>%
+  select(-c(timeStart, condition, q1:q10)) %>%
+  write_csv("../data/week8_shiny_data.csv")
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
