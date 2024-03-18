@@ -8,12 +8,12 @@
 #
 
 library(shiny)
-
+data = read_csv("data/week8_shiny_data.csv")
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("PSY 8712 Week 8 Project"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -27,7 +27,7 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("distPlot")
+           plotOutput("corr_plot")
         )
     )
 )

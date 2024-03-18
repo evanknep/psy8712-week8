@@ -12,7 +12,7 @@ An image of this project as of *`r Sys.Date()`* can be accessed by [clicking thi
 An interactive web app is available by [clicking this link] instead. 
 
 # **Script Settings and Resources**
-```{r script settings, echo=TRUE, results='hide'}
+```{r script settings, echo=TRUE, results='hide', message=FALSE}
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(tidyverse)
 library(dplyr)
