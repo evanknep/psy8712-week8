@@ -8,43 +8,34 @@
 #
 
 library(shiny)
-data = read_csv("data/week8_shiny_data.csv")
+data = read_csv("../data/week8_shiny_data.csv")
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
-    titlePanel("PSY 8712 Week 8 Project"),
+    titlePanel("PSY 8712 Week 8 Project"), #creating a project title that matches what I have in my markdown file
+    selectInput('shaded_error', label = 'Display shaded error bars?', choices = c('Display Error Band', 'Suppress Error Band'), selected = "Display Error Band"), #creating a input select for displaying shaded error bars
+    selectInput('sex', label = "Select Sex", choices = c('Male', 'Female', 'All'), selected = 'All'), #creating input select for sex
+    selectInput('date', label = "Exclude Participants from before July 1, 2017?", choices = c('Exclude', 'Do not exclude'), selected = "Do not exclude"), #creating input select for excluding pre 2017
+    
+    
+    plotOutput("corr_plot"), #creating plot objects to reference in our server section below. Putting it in the main body here without tabs or paneling
+    
 
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("corr_plot")
-        )
-    )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+      output$corr_plot <- renderPlot({
+        data %>%
+          ggplot(aes(x=q1_q6_mean, y=q8_q10_mean)) +
+          geom_point() + 
+          geom_smooth(method = "lm", color = "purple") + 
+          labs(x = "q1-q6 mean", y = "q8-q10 mean", title = "Correlation of Q1-Q6 and Q8-Q10 Question Scores")
+      })
 
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
+   
 }
 
 # Run the application 
