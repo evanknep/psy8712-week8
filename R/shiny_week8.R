@@ -47,6 +47,9 @@ server <- function(input, output) {
       
   
   output$corr_plot <- renderPlot({
+    # rendering our ggplot in our corrplot spot assigned above. It's a basic scatterplot using our filtered_data (based on user input)
+    # with the only difference being the if statement that gatekeeps our shaded error bar. If they select to display it a geom_smooth
+    # call goes through, otherwise we live without it.
     ggplot(filtered_data(), aes(x=q1_q6_mean, y=q8_q10_mean)) +
       geom_point() + 
       labs(x = "q1-q6 mean", y = "q8-q10 mean", title = "Correlation of Q1-Q6 and Q8-Q10 Question Scores") +
