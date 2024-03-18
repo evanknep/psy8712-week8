@@ -8,7 +8,8 @@
 #
 
 library(shiny)
-data = read_csv("../data/week8_shiny_data.csv")
+library(tidyverse)
+data = read_csv("week8_shiny_data.csv")
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 

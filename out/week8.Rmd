@@ -9,7 +9,7 @@ output: html_document
 
 An image of this project as of *`r Sys.Date()`* can be accessed by [clicking this link](https://mybinder.org/v2/gh/evanknep/psy8712-week8/HEAD). 
 
-An interactive web app is available by [clicking this link] instead. 
+An interactive web app is available by [clicking this link](https://knepx001.shinyapps.io/shiny_week8/) instead. 
 
 # **Script Settings and Resources**
 ```{r script settings, echo=TRUE, results='hide', message=FALSE}
