@@ -26,14 +26,24 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  filtered_data <- reactive({
-    if (input$sex == 'All') {
-      data
-    } else {
-      data %>%
-        filter(gender == input$sex)
+  # this function is to filter the data based on the users choice for gender/sex. 
+  #If they select All, which is the default, no filtering occurs, otherwise it will take their choice of M/F and filter accordingly.
+  # added a portion to filter the date as well. I wrote it this way after failing to find a way to incorporate the reactive plotting and 
+  #filtering in the same pipeline. I had originally tried to write it so that my dataset filtered reactively and then still piped into my ggplot so that I could 
+  #recycle my plotting code from the markdown file but I failed to get it to work. I settled on this method because even if it is perhaps not the most efficient
+  #it gets the job done. It just filters a data set based on our user inputs, and then ultimately returns that dataset as our filtered_data, which then gets plugged
+  #in to our ggplot. I set my inputs for sex/gender above so that Male and Female = M/F, which lets me filter by the input value specifically rather than adding 
+  #separate if statements for each. This way I only need to account for if they selected All, our default value.
+  filtered_data <- reactive({ 
+    if (input$sex != 'All') {
+      data <- data %>% filter(gender == input$sex) 
     }
-  })
+    if (input$date == 'Exclude') { 
+      data <- data %>% filter(timeEnd >= '2017-07-01')
+    }
+    data })
+    
+  
       
   
   output$corr_plot <- renderPlot({
